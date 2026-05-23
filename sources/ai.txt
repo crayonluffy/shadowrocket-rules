@@ -6,11 +6,16 @@
 # 空行會被忽略
 # ============================================================
 
-# blackmatrix7 維護的 Shadowrocket 規則集 (中文圈最權威)
+# ----- blackmatrix7 維護的 Shadowrocket 規則集 (廣度好) -----
 https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Claude/Claude.list
 https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/OpenAI/OpenAI.list
 https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Gemini/Gemini.list
 https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Copilot/Copilot.list
+
+# ----- xiaolai 維護的 Claude 完整規則集 (深度好) -----
+# 透過 binary 分析 + 網路監控 + DNS 探查發現所有 Claude 用到的域名
+# 涵蓋 API、Web、CLI、MCP、Anthropic IP 範圍、第三方依賴
+https://raw.githubusercontent.com/xiaolai/anthropic-claude-surge-rules-set/main/anthropic.list
 
 # 如果想加更多上游,直接在下面加 URL,例如:
 # https://raw.githubusercontent.com/其他/repo/path/to/list
