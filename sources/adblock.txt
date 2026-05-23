@@ -1,0 +1,16 @@
+# ============================================================
+# 廣告攔截規則 - 上游來源清單 (Ad-blocking sources)
+# ============================================================
+# 每行一個 URL,GitHub Actions 會自動抓取並合併成 adblock.list
+# 註解用 # 開頭,空行會被忽略
+#
+# 這些清單會在 configs/ai-only.conf 內以 REJECT 策略引用,
+# 也就是「直接擋掉連線」,所以只放廣告 / 追蹤 / 分析類域名。
+# ============================================================
+
+# ----- blackmatrix7 維護的廣告攔截規則 (AdvertisingLite 精簡版,誤殺較少) -----
+# 完整版為 .../AdvertisingLite/ → .../Advertising/ (域名更多但誤殺機率也較高)
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/AdvertisingLite/AdvertisingLite.list
+
+# 想加更多廣告來源,直接在下面加 URL,例如 Privacy / Hijacking 等清單:
+# https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Privacy/Privacy.list

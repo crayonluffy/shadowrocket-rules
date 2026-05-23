@@ -1,0 +1,16 @@
+# ============================================================
+# 廣告攔截 個人補漏清單 (Ad-blocking personal patches)
+# ============================================================
+# 在這裡放上游沒收錄、但你想額外擋掉的廣告 / 追蹤域名。
+# 編輯後 push,GitHub Actions 會自動合併到 adblock.list (策略為 REJECT)。
+#
+# ⚠️ 只放「要擋掉」的域名。
+#    如果某個正常網站被誤殺、想放行 (allow-list),不要寫在這裡 —
+#    要到 configs/ai-only.conf 的「緊急補丁區」加一行 DIRECT,
+#    放在 adblock RULE-SET 之上 (先匹配先生效)。例如:
+#      DOMAIN-SUFFIX,被誤殺的網站.com,DIRECT
+# ============================================================
+
+# 範例 (取消註解即可生效):
+# DOMAIN-SUFFIX,annoying-ads.example.com
+# DOMAIN-KEYWORD,trackme
