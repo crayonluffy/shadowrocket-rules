@@ -1,0 +1,106 @@
+name: Update Shadowrocket Rules
+
+on:
+  schedule:
+    # 每天 UTC 0:00 自動跑 (台灣/香港時間早上 8 點)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # 也可以到 Actions 頁面手動觸發
+  push:
+    paths:
+      - 'sources/**'
+      - 'extras/**'
+      - '.github/workflows/update-rules.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build merged rule list
+        run: |
+          set -e
+          mkdir -p output
+          
+          # 對 sources/ 下每個 .txt 檔案產生對應的 .list
+          for source_file in sources/*.txt; do
+            [ -f "$source_file" ] || continue
+            
+            base_name=$(basename "$source_file" .txt)
+            output_file="output/${base_name}.list"
+            extras_file="extras/${base_name}-extras.list"
+            
+            echo "=== Building ${base_name}.list ==="
+            
+            # 寫入檔頭
+            {
+              echo "# ============================================================"
+              echo "# ${base_name}.list - 自動合併產生,請勿手動編輯"
+              echo "# 產生時間: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+              echo "# 上游來源: sources/${base_name}.txt"
+              echo "# 個人補漏: extras/${base_name}-extras.list"
+              echo "# ============================================================"
+              echo ""
+            } > "$output_file"
+            
+            # 抓所有上游來源
+            while IFS= read -r url || [ -n "$url" ]; do
+              # 跳過空行和註解
+              [ -z "$url" ] && continue
+              [[ "$url" =~ ^[[:space:]]*# ]] && continue
+              
+              # 去除前後空白
+              url=$(echo "$url" | xargs)
+              
+              echo "  Fetching: $url"
+              echo "# ---- 來源: $url ----" >> "$output_file"
+              
+              if curl -sSL --max-time 30 --fail "$url" >> "$output_file"; then
+                echo "" >> "$output_file"
+              else
+                echo "# ⚠️ 抓取失敗 (HTTP error 或 timeout)" >> "$output_file"
+                echo "" >> "$output_file"
+                echo "    ⚠️ Failed: $url"
+              fi
+            done < "$source_file"
+            
+            # 合併個人補漏清單
+            if [ -f "$extras_file" ]; then
+              echo "# ---- 個人補漏: $extras_file ----" >> "$output_file"
+              cat "$extras_file" >> "$output_file"
+              echo "" >> "$output_file"
+              echo "  Merged extras: $extras_file"
+            fi
+            
+            # 統計規則數
+            rule_count=$(grep -cE '^(DOMAIN|IP-CIDR|USER-AGENT|URL-REGEX|PROCESS-NAME)' "$output_file" || echo 0)
+            echo "  Total rules: $rule_count"
+            echo ""
+          done
+
+      - name: Copy outputs to root
+        run: |
+          # 把 output/ 下的檔案放到 repo 根目錄,讓 raw URL 更短
+          cp output/*.list . 2>/dev/null || true
+          ls -la *.list 2>/dev/null || echo "No .list files generated"
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 只 add .list 檔案
+          git add *.list 2>/dev/null || true
+          
+          if git diff --staged --quiet; then
+            echo "✅ No changes to commit"
+          else
+            git commit -m "chore: auto-update rules ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            git push
+            echo "✅ Pushed updates"
+          fi

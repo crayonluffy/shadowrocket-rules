@@ -1,0 +1,31 @@
+# ============================================================
+# AI 個人補漏清單
+# ============================================================
+# 在這裡放上游沒收錄的 AI 相關網站
+# 編輯後 push,GitHub Actions 會自動合併到 ai.list
+# ============================================================
+
+# Anthropic 相關補漏
+DOMAIN-SUFFIX,claudeusercontent.com
+
+# OpenAI 相關補漏
+DOMAIN-SUFFIX,sora.com
+DOMAIN-SUFFIX,openai.fm
+
+# 新興 AI 服務
+DOMAIN-SUFFIX,perplexity.ai
+DOMAIN-SUFFIX,poe.com
+DOMAIN-SUFFIX,character.ai
+DOMAIN-SUFFIX,mistral.ai
+DOMAIN-SUFFIX,cohere.com
+DOMAIN-SUFFIX,deepseek.com
+DOMAIN-SUFFIX,kimi.ai
+DOMAIN-SUFFIX,kimi.moonshot.cn
+
+# AI 開發工具
+DOMAIN-SUFFIX,cursor.com
+DOMAIN-SUFFIX,cursor.sh
+DOMAIN-SUFFIX,v0.dev
+DOMAIN-SUFFIX,bolt.new
+DOMAIN-SUFFIX,replit.com
+DOMAIN-SUFFIX,huggingface.co

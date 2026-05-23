@@ -1,0 +1,16 @@
+# ============================================================
+# AI 服務規則 - 上游來源清單
+# ============================================================
+# 每行一個 URL,GitHub Actions 會自動抓取並合併
+# 註解用 # 開頭
+# 空行會被忽略
+# ============================================================
+
+# blackmatrix7 維護的 Shadowrocket 規則集 (中文圈最權威)
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Claude/Claude.list
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/OpenAI/OpenAI.list
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Gemini/Gemini.list
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Copilot/Copilot.list
+
+# 如果想加更多上游,直接在下面加 URL,例如:
+# https://raw.githubusercontent.com/其他/repo/path/to/list

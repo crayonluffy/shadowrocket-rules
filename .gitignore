@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# 編輯器
+.vscode/
+.idea/
+*.swp
+*~
+
+# 暫存
+output/
+*.tmp
