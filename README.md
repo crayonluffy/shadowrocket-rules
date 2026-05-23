@@ -2,7 +2,7 @@
 
 自動合併上游規則 + 個人補漏的 Shadowrocket 規則集。
 
-每天 UTC 00:00（台港時間早上 8 點）自動從上游抓最新規則，合併個人補漏清單，產生最終的 `.list` 檔案。
+每天 UTC 00:00（港澳台時間早上 8 點）自動從上游抓最新規則，合併個人補漏清單，產生最終的 `.list` 檔案。
 
 > Auto-merged Shadowrocket rule sets (upstream rules + personal patches), rebuilt automatically every day.
 

@@ -2,7 +2,7 @@ name: Update Shadowrocket Rules
 
 on:
   schedule:
-    # 每天 UTC 0:00 自動跑 (台灣/香港時間早上 8 點)
+    # 每天 UTC 0:00 自動跑 (港澳台時間早上 8 點)
     - cron: '0 0 * * *'
   workflow_dispatch:
     # 也可以到 Actions 頁面手動觸發
