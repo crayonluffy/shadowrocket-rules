@@ -1,6 +1,6 @@
 # ============================================================
 # ai.list - 自動合併產生,請勿手動編輯
-# 產生時間: 2026-05-23 12:23:53 UTC
+# 產生時間: 2026-05-23 12:28:40 UTC
 # 上游來源: sources/ai.txt
 # 個人補漏: extras/ai-extras.list
 # ============================================================
@@ -188,34 +188,170 @@ DOMAIN,cdn.usefathom.com
 
 # ---- 個人補漏: extras/ai-extras.list ----
 # ============================================================
-# AI 個人補漏清單
+# AI 個人補漏清單 (v3 - 整合 v2fly 英文圈資料)
 # ============================================================
 # 在這裡放上游沒收錄的 AI 相關網站
 # 編輯後 push,GitHub Actions 會自動合併到 ai.list
+# 最後更新: 2026-05-23
+#
+# 上游 (在 sources/ai.txt):
+#   - blackmatrix7: 中文圈 Shadowrocket 規則 (廣度)
+#   - xiaolai: Claude 深度規則 (binary 分析,涵蓋 CLI/MCP/IP 段)
+#
+# 本清單補漏:
+#   - OpenAI: 整合 v2fly 英文圈最完整清單 (含 Advanced Voice/Sora)
+#   - Google AI: 精準走 VPN (登入 + Gemini),Gmail/Drive 直連
+#   - 中文圈 AI: DeepSeek/Kimi/Doubao/Qwen 等
+#   - AI 開發/圖像/影音工具
 # ============================================================
 
-# Anthropic 相關補漏
-DOMAIN-SUFFIX,claudeusercontent.com
-
-# OpenAI 相關補漏
+# ====== OpenAI / ChatGPT (整合 v2fly 英文圈完整資料) ======
+# 主要域名
+DOMAIN-SUFFIX,chat.com
+DOMAIN-SUFFIX,chatgpt.com
+DOMAIN-SUFFIX,crixet.com
+DOMAIN-SUFFIX,oaistatic.com
+DOMAIN-SUFFIX,oaiusercontent.com
+DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,sora.com
 DOMAIN-SUFFIX,openai.fm
+DOMAIN-SUFFIX,labs.openai.com
 
-# 新興 AI 服務
+# CDN & API (v2fly 補的)
+DOMAIN,openai.com.cdn.cloudflare.net
+DOMAIN,openaiapi-site.azureedge.net
+DOMAIN,openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net
+DOMAIN,openaicom.imgix.net
+DOMAIN,openaicomproductionae4b.blob.core.windows.net
+DOMAIN,production-openaicom-storage.azureedge.net
+
+# Advanced Voice (語音模式)
+DOMAIN-SUFFIX,chatgpt.livekit.cloud
+DOMAIN-SUFFIX,host.livekit.cloud
+DOMAIN-SUFFIX,turn.livekit.cloud
+DOMAIN-SUFFIX,livekit.cloud
+
+# Codex / API 相關
+DOMAIN-SUFFIX,codex.openai.com
+
+# 追蹤/分析 (可選但建議走代理,以免被識別)
+DOMAIN-SUFFIX,arkoselabs.com
+DOMAIN-SUFFIX,client-api.arkoselabs.com
+DOMAIN,o33249.ingest.sentry.io
+DOMAIN,browser-intake-datadoghq.com
+
+# ====== Anthropic / Claude (補 xiaolai 沒蓋到的) ======
+# xiaolai 已涵蓋大部分,以下為額外補充
+DOMAIN-SUFFIX,anthropic.io
+DOMAIN-SUFFIX,claudeai.uk
+DOMAIN-SUFFIX,anthropicusercontent.com
+
+# ====== Google AI 服務 (Gemini / AI Studio / Vertex) ======
+DOMAIN,gemini.google.com
+DOMAIN-SUFFIX,aistudio.google.com
+DOMAIN-SUFFIX,generativelanguage.googleapis.com
+DOMAIN-SUFFIX,labs.google
+DOMAIN-SUFFIX,bard.google.com
+DOMAIN-SUFFIX,deepmind.google
+DOMAIN-SUFFIX,deepmind.com
+DOMAIN-SUFFIX,notebooklm.google
+DOMAIN-SUFFIX,notebooklm.google.com
+DOMAIN-SUFFIX,aiplatform.googleapis.com
+DOMAIN-SUFFIX,generativeai.google
+
+# ====== Google 登入 / 帳號驗證 (走 VPN,讓 SSO 登入 AI 網站正常) ======
+DOMAIN,accounts.google.com
+DOMAIN,oauth2.googleapis.com
+DOMAIN,oauthaccountmanager.googleapis.com
+DOMAIN,people.googleapis.com
+DOMAIN,securetoken.googleapis.com
+DOMAIN,identitytoolkit.googleapis.com
+
+# ====== Microsoft Copilot 補強 ======
+DOMAIN-SUFFIX,githubcopilot.com
+DOMAIN-SUFFIX,individual.githubcopilot.com
+DOMAIN-SUFFIX,business.githubcopilot.com
+DOMAIN-SUFFIX,enterprise.githubcopilot.com
+DOMAIN-SUFFIX,api.githubcopilot.com
+DOMAIN-SUFFIX,proxy.githubcopilot.com
+DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
+
+# ====== xAI / Grok ======
+DOMAIN-SUFFIX,grok.com
+DOMAIN-SUFFIX,x.ai
+
+# ====== Perplexity ======
 DOMAIN-SUFFIX,perplexity.ai
-DOMAIN-SUFFIX,poe.com
-DOMAIN-SUFFIX,character.ai
-DOMAIN-SUFFIX,mistral.ai
-DOMAIN-SUFFIX,cohere.com
+
+# ====== 中文圈 AI ======
 DOMAIN-SUFFIX,deepseek.com
 DOMAIN-SUFFIX,kimi.ai
 DOMAIN-SUFFIX,kimi.moonshot.cn
+DOMAIN-SUFFIX,moonshot.cn
+DOMAIN-SUFFIX,doubao.com
+DOMAIN-SUFFIX,coze.com
+DOMAIN-SUFFIX,glm.cn
+DOMAIN-SUFFIX,zhipuai.cn
+DOMAIN-SUFFIX,bigmodel.cn
+DOMAIN-SUFFIX,minimaxi.com
+DOMAIN-SUFFIX,hailuo.ai
+DOMAIN-SUFFIX,qwen.ai
+DOMAIN-SUFFIX,tongyi.aliyun.com
 
-# AI 開發工具
+# ====== 其他 AI 平台 ======
+DOMAIN-SUFFIX,poe.com
+DOMAIN-SUFFIX,character.ai
+DOMAIN-SUFFIX,characterai.io
+DOMAIN-SUFFIX,mistral.ai
+DOMAIN-SUFFIX,cohere.com
+DOMAIN-SUFFIX,cohere.ai
+DOMAIN-SUFFIX,you.com
+DOMAIN-SUFFIX,phind.com
+DOMAIN-SUFFIX,groq.com
+DOMAIN-SUFFIX,together.ai
+DOMAIN-SUFFIX,fireworks.ai
+DOMAIN-SUFFIX,openrouter.ai
+DOMAIN-SUFFIX,inflection.ai
+DOMAIN-SUFFIX,pi.ai
+
+# ====== AI 開發者工具 ======
 DOMAIN-SUFFIX,cursor.com
 DOMAIN-SUFFIX,cursor.sh
 DOMAIN-SUFFIX,v0.dev
 DOMAIN-SUFFIX,bolt.new
 DOMAIN-SUFFIX,replit.com
+DOMAIN-SUFFIX,replit.dev
 DOMAIN-SUFFIX,huggingface.co
+DOMAIN-SUFFIX,hf.co
+DOMAIN-SUFFIX,langchain.com
+DOMAIN-SUFFIX,langsmith.com
+DOMAIN-SUFFIX,langfuse.com
+
+# ====== AI 圖像 / 影片 / 音樂生成 ======
+DOMAIN-SUFFIX,midjourney.com
+DOMAIN-SUFFIX,stability.ai
+DOMAIN-SUFFIX,runwayml.com
+DOMAIN-SUFFIX,leonardo.ai
+DOMAIN-SUFFIX,ideogram.ai
+DOMAIN-SUFFIX,suno.com
+DOMAIN-SUFFIX,suno.ai
+DOMAIN-SUFFIX,udio.com
+DOMAIN-SUFFIX,elevenlabs.io
+DOMAIN-SUFFIX,heygen.com
+DOMAIN-SUFFIX,d-id.com
+DOMAIN-SUFFIX,synthesia.io
+
+# ====== AI 寫作 / 翻譯 ======
+DOMAIN-SUFFIX,deepl.com
+DOMAIN-SUFFIX,grammarly.com
+DOMAIN-SUFFIX,quillbot.com
+DOMAIN-SUFFIX,jasper.ai
+DOMAIN-SUFFIX,copy.ai
+
+# ====== 驗證 / CDN 服務 (AI 服務常依賴的) ======
+DOMAIN-SUFFIX,auth0.com
+DOMAIN-SUFFIX,clerk.dev
+DOMAIN-SUFFIX,clerk.accounts.dev
+DOMAIN-SUFFIX,workos.com
+DOMAIN-SUFFIX,statsig.com
 
