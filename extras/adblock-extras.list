@@ -6,7 +6,7 @@
 #
 # ⚠️ 只放「要擋掉」的域名。
 #    如果某個正常網站被誤殺、想放行 (allow-list),不要寫在這裡 —
-#    要到 configs/ai-only.conf 的「緊急補丁區」加一行 DIRECT,
+#    要到 configs/adblock.conf 的「Layer 1 誤殺放行區」加一行 DIRECT,
 #    放在 adblock RULE-SET 之上 (先匹配先生效)。例如:
 #      DOMAIN-SUFFIX,被誤殺的網站.com,DIRECT
 # ============================================================
