@@ -1,13 +1,13 @@
 # ============================================================
 # adblock.list - 自動合併產生,請勿手動編輯
-# 產生時間: 2026-09-20 02:11:47 UTC
+# 產生時間: 2026-09-21 02:11:54 UTC
 # 上游來源: sources/adblock.txt
 # 個人補漏: extras/adblock-extras.list
 # ============================================================
 
 # ---- 來源: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-surge.txt ----
 #TITLE=anti-AD
-#VER=20260920045249
+#VER=20260920180534
 #URL=https://github.com/privacy-protection-tools/anti-AD
 #TOTAL_LINES=100732
 DOMAIN-SUFFIX,000491b06a.com
@@ -85951,7 +85951,7 @@ DOMAIN-SUFFIX,transactionscookclotted.com
 DOMAIN-SUFFIX,hnibej.transat.com
 DOMAIN-SUFFIX,tck.fr.transavia.com
 DOMAIN-SUFFIX,tk.transavia.com
-DOMAIN-SUFFIX,transcend.io
+DOMAIN-SUFFIX,telemetry.transcend.io
 DOMAIN-SUFFIX,info.transcontinental-printing.com
 DOMAIN-SUFFIX,marketing.transcore.com
 DOMAIN-SUFFIX,transferfaciliate.com
