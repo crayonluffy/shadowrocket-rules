@@ -47,6 +47,10 @@ AI 打不開、或其他網站變慢，第一件事先看這裡是不是「配�
 | [`adblock.conf`](../configs/adblock.conf) | – | 擋 / blocked | – | 否 / No |
 | [`ai-tailscale.conf`](../configs/ai-tailscale.conf) | 走節點 / node | – | 內建 Tailscale / built-in | 是 / Yes |
 | [`ai-tailnet-via-node.conf`](../configs/ai-tailnet-via-node.conf) | 走節點 / node | – | 經節點 / through the node | 是，且節點在 tailnet 內 / Yes, and the node is in the tailnet |
+| [`asia-direct.conf`](../configs/asia-direct.conf) | 走節點 / node | – | 經節點 / through the node | 是 / Yes |
+
+前四個配置：AI 以外的流量全部直連。`asia-direct.conf` 不同：東亞、東南亞直連，**其他地區也走節點**，見 [亞洲直連教學](asia-direct.md)。
+> With the first four configs everything except AI goes direct. `asia-direct.conf` differs: East and Southeast Asia go direct and **the rest of the world also uses the node**, see the [Asia-direct tutorial](asia-direct.md).
 
 AI 配置想同時擋廣告：用「包含配置」把 `adblock.conf` 合併進來，見 [README](../README.md)。Tailscale 的設定見 [Tailscale 教學](tailscale.md)。
 > To add ad-blocking to an AI config, merge `adblock.conf` with *Include Configuration*, see the [README](../README.md). For Tailscale see the [Tailscale tutorial](tailscale.md).

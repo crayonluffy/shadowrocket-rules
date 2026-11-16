@@ -1,0 +1,121 @@
+# ============================================================
+# Clash Verge / mihomo profile - 亞洲直連,其他走節點
+# Asia direct, everything else through the node (Windows, macOS)
+# ============================================================
+# 與 configs/asia-direct.conf (Shadowrocket) 相同的規則:
+#   - AI 相關網站一律走出口節點
+#   - 東亞 + 東南亞的 IP 直連 (用這台電腦原本的網路)
+#   - 其他地區走出口節點
+#
+# 這是「範本」:下面的節點是假的。請用腳本產生你自己的版本:
+#   python3 scripts/make-clash-profile.py -o private/clash-me.yaml 'ss://...' 'ss://...'
+# This file is a template: the nodes below are placeholders. Build your own
+# copy with scripts/make-clash-profile.py (see docs/asia-direct.md).
+#
+# 完整教學: https://github.com/crayonluffy/shadowrocket-rules/blob/main/docs/asia-direct.md
+# ============================================================
+
+mixed-port: 7890
+mode: rule
+ipv6: false
+log-level: info
+
+proxies:
+  # >>> NODES (replaced by scripts/make-clash-profile.py)
+  - name: "Tokyo"
+    type: ss
+    server: vpn.example.com
+    port: 38388
+    cipher: chacha20-ietf-poly1305
+    password: "CHANGE-ME"
+    udp: true
+  - name: "Singapore"
+    type: ss
+    server: sg.example.com
+    port: 38388
+    cipher: chacha20-ietf-poly1305
+    password: "CHANGE-ME"
+    udp: true
+  # <<< NODES
+
+proxy-groups:
+  # 出口:在 Clash Verge 的「代理」頁選東京或新加坡
+  # Exit: pick Tokyo or Singapore on the Proxies page of Clash Verge
+  - name: Exit
+    type: select
+    proxies:
+      # >>> EXIT (replaced by scripts/make-clash-profile.py)
+      - "Tokyo"
+      - "Singapore"
+      # <<< EXIT
+
+  # Tailscale 內網怎麼走 / How to reach Tailscale addresses:
+  #   DIRECT = 這台電腦有開 Tailscale App (預設) / this computer runs the Tailscale app (default)
+  #   Exit   = 這台電腦沒有 Tailscale,經節點進內網 / no Tailscale here: go in through the node
+  - name: Tailnet
+    type: select
+    proxies:
+      - DIRECT
+      - Exit
+
+rule-providers:
+  # AI 規則清單:與 Shadowrocket 共用同一份,每天更新
+  # The AI rule list: the same file Shadowrocket uses, rebuilt every day
+  ai:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/crayonluffy/shadowrocket-rules/main/ai.list"
+    path: ./ruleset/shadowrocket-rules-ai.list
+    interval: 86400
+    proxy: Exit
+
+rules:
+  # Layer 1: Tailscale 內網
+  - DOMAIN-SUFFIX,ts.net,Tailnet
+  - IP-CIDR,100.64.0.0/10,Tailnet,no-resolve
+
+  # Layer 2: AI 服務一律走出口節點
+  - RULE-SET,ai,Exit
+
+  # Layer 3: 保底防護:清單載入失敗時,核心 AI 域名直接擋掉,不用真實 IP 連
+  # Failsafe: if the list fails to load, core AI domains are blocked, never sent direct
+  - DOMAIN-SUFFIX,anthropic.com,REJECT
+  - DOMAIN-SUFFIX,anthropic.io,REJECT
+  - DOMAIN-SUFFIX,claude.ai,REJECT
+  - DOMAIN-SUFFIX,claude.com,REJECT
+  - DOMAIN-SUFFIX,claudeusercontent.com,REJECT
+  - DOMAIN-SUFFIX,openai.com,REJECT
+  - DOMAIN-SUFFIX,chatgpt.com,REJECT
+  - DOMAIN-SUFFIX,oaistatic.com,REJECT
+  - DOMAIN-SUFFIX,oaiusercontent.com,REJECT
+  - DOMAIN-SUFFIX,sora.com,REJECT
+
+  # Layer 4: 本地網路直連
+  - GEOIP,LAN,DIRECT
+
+  # Layer 5: 亞洲直連 (依伺服器 IP 所在地)
+  # 東亞 / East Asia
+  - GEOIP,CN,DIRECT
+  - GEOIP,HK,DIRECT
+  - GEOIP,MO,DIRECT
+  - GEOIP,TW,DIRECT
+  - GEOIP,JP,DIRECT
+  - GEOIP,KR,DIRECT
+  - GEOIP,KP,DIRECT
+  - GEOIP,MN,DIRECT
+  # 東南亞 / Southeast Asia
+  - GEOIP,SG,DIRECT
+  - GEOIP,MY,DIRECT
+  - GEOIP,TH,DIRECT
+  - GEOIP,VN,DIRECT
+  - GEOIP,ID,DIRECT
+  - GEOIP,PH,DIRECT
+  - GEOIP,BN,DIRECT
+  - GEOIP,KH,DIRECT
+  - GEOIP,LA,DIRECT
+  - GEOIP,MM,DIRECT
+  - GEOIP,TL,DIRECT
+
+  # Layer 6: 其他全部走出口節點 (美洲、歐洲、其他地區)
+  - MATCH,Exit
