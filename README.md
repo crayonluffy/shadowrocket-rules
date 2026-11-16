@@ -125,6 +125,21 @@ iPhone 一次只能開一個 VPN，所以官方 Tailscale App 和 Shadowrocket �
 
 ---
 
+## 🌏 亞洲直連，其他走節點（選用）/ Asia direct, the rest through the node (optional)
+
+想讓東亞、東南亞的網站用原本的網路直連，其他地區（美洲、歐洲…）才走節點？iPhone、Windows、Mac 都能用同一套規則，出口節點（例如東京或新加坡）由你自己切換。
+> Want sites in East and Southeast Asia to use your own connection, and only the rest (Americas, Europe…) to use the node? The same rules work on iPhone, Windows and Mac, and you switch the exit node (for example Tokyo or Singapore) yourself.
+
+| 裝置 / Device | App | 檔案 / File |
+|---|---|---|
+| iPhone | Shadowrocket | `configs/asia-direct.conf` |
+| Windows、Mac | Clash Verge | 管理員用 `scripts/make-clash-profile.py` 產生的個人設定檔 / a personal profile the admin builds with `scripts/make-clash-profile.py` |
+
+完整步驟：**[亞洲直連教學](docs/asia-direct.md)**
+> Full walkthrough: **[Asia-direct tutorial](docs/asia-direct.md)**
+
+---
+
 ## 📖 使用指南 / Guide
 
 日常操作（看流量走哪裡、更新規則、保持連線、全局路由）：**[Shadowrocket 使用指南](docs/shadowrocket-guide.md)**
@@ -182,12 +197,17 @@ shadowrocket-rules/
 │   ├── ai-only.conf              AI 分流配置（訂閱這個走 VPN）
 │   ├── ai-tailscale.conf         AI 分流 + Shadowrocket 內建 Tailscale
 │   ├── ai-tailnet-via-node.conf  AI 分流 + 經節點進 tailnet
+│   ├── asia-direct.conf          亞洲直連、其他走節點（含 AI 分流與 tailnet）
 │   └── adblock.conf              純廣告攔截配置（可單用，或被 AI 配置 include 合併）
+├── clash/
+│   └── asia-direct.yaml          Clash Verge 範本（Windows、Mac；節點為假資料）
 ├── docs/
 │   ├── tailscale.md              Shadowrocket + Tailscale 教學
+│   ├── asia-direct.md            亞洲直連教學（iPhone、Windows、Mac）
 │   └── shadowrocket-guide.md     Shadowrocket 使用指南
 ├── scripts/
-│   └── check.py                  檢查配置、補漏清單與文件連結
+│   ├── check.py                  檢查配置、補漏清單與文件連結
+│   └── make-clash-profile.py     用 ss:// 連結產生個人 Clash 設定檔
 ├── ai.list                       自動產生：AI 規則 ← ai-only.conf 引用 (PROXY)
 ├── adblock.list                  自動產生：廣告規則 ← adblock.conf 引用 (REJECT)
 └── README.md
@@ -233,9 +253,19 @@ DOMAIN-SUFFIX,newsite.com
 python3 scripts/check.py
 ```
 
-會檢查每個 `.conf` 的規則與策略、`RULE-SET` 指向的清單是否存在、`extras/` 清單有沒有誤寫策略、文件連結是否有效。三個 AI 配置（`ai-only`、`ai-tailscale`、`ai-tailnet-via-node`）共用同一段「保底防護」REJECT 規則：改其中一個，另外兩個也要改，檢查會抓到不一致。
+會檢查每個 `.conf` 的規則與策略、`RULE-SET` 指向的清單是否存在、`extras/` 清單有沒有誤寫策略、文件連結是否有效。所有 AI 配置（`ai-only`、`ai-tailscale`、`ai-tailnet-via-node`、`asia-direct`）和 Clash 範本 `clash/asia-direct.yaml` 共用同一段「保底防護」REJECT 規則：改其中一個，其他也要改，檢查會抓到不一致。
 
-兩個 Tailscale 配置的 `bypass-tun` **不能**有 `100.64.0.0/10`（否則 Tailscale 流量不會經過規則）。
+有 Tailscale 規則的配置，`bypass-tun` **不能**有 `100.64.0.0/10`（否則 Tailscale 流量不會經過規則）。
+
+`configs/asia-direct.conf` 和 `clash/asia-direct.yaml` 的「亞洲」國家清單要一致（檢查會比對）。想增減國家，兩個檔案都要改。
+
+### 產生某人的 Clash 設定檔（Windows、Mac）
+
+```
+sudo ss-list alice | python3 scripts/make-clash-profile.py -o private/clash-alice.yaml -
+```
+
+產生的檔案含節點密碼：`private/` 已被 git 忽略，請私下傳給對方，不要 push。步驟見 [亞洲直連教學](docs/asia-direct.md)。
 
 ### 手動觸發更新
 

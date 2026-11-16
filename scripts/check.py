@@ -17,7 +17,9 @@ RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD", "DOMAIN-WILDCARD",
               "URL-REGEX", "RULE-SET", "FINAL"}
 TAILSCALE_NET = ipaddress.ip_network("100.64.0.0/10")
 # Configs that route the Tailscale range: file name -> policy it must use.
-TAILNET_CONFIGS = {"ai-tailscale.conf": "TAILSCALE", "ai-tailnet-via-node.conf": "PROXY"}
+TAILNET_CONFIGS = {"ai-tailscale.conf": "TAILSCALE", "ai-tailnet-via-node.conf": "PROXY",
+                   "asia-direct.conf": "PROXY"}
+CLASH_TEMPLATE = ROOT / "clash" / "asia-direct.yaml"
 
 errors = []
 
@@ -129,6 +131,39 @@ def check_links(path):
             fail(path, f"raw URL to a file that does not exist: {name}")
 
 
+def clash_rules(path):
+    """The rule lines of a Clash profile, as field lists (no YAML library needed)."""
+    return [[field.strip() for field in line.strip()[2:].split(",")]
+            for line in path.read_text(encoding="utf-8").partition("\nrules:\n")[2].splitlines()
+            if line.strip().startswith("- ")]
+
+
+def check_clash(path, reference_failsafe):
+    """The Clash template carries the same routing as configs/asia-direct.conf."""
+    text = path.read_text(encoding="utf-8")
+    rules = clash_rules(path)
+    if not rules or rules[-1] != ["MATCH", "Exit"]:
+        fail(path, "the last rule must be MATCH,Exit")
+    for marker in ("# >>> NODES", "# <<< NODES", "# >>> EXIT", "# <<< EXIT"):
+        if text.count(marker) != 1:
+            fail(path, f"marker '{marker}' must appear exactly once (scripts/make-clash-profile.py needs it)")
+    passwords = set(re.findall(r'(?m)^\s*password:\s*(.+)$', text))
+    if passwords != {'"CHANGE-ME"'}:
+        fail(path, "the template must hold placeholder passwords only")
+    if REPO_RAW + "ai.list" not in text:
+        fail(path, "the ai rule-provider must point at this repo's ai.list")
+    failsafe = sorted(",".join(rule) for rule in rules if rule[0] == "DOMAIN-SUFFIX" and rule[-1] == "REJECT")
+    if reference_failsafe and failsafe != reference_failsafe:
+        fail(path, "failsafe REJECT rules differ from configs/ai-only.conf")
+    _, conf_rules = parse_conf(ROOT / "configs" / "asia-direct.conf")
+    geo = lambda items: [rule[1] for rule in items if rule[0] == "GEOIP" and rule[2] == "DIRECT"]
+    if geo(rules) != geo(conf_rules):
+        fail(path, "the GEOIP country list differs from configs/asia-direct.conf")
+    tailnet = [rule for rule in rules if rule[:2] in (["DOMAIN-SUFFIX", "ts.net"], ["IP-CIDR", "100.64.0.0/10"])]
+    if [rule[2] for rule in tailnet] != ["Tailnet", "Tailnet"] or rules.index(tailnet[-1]) > rules.index(["RULE-SET", "ai", "Exit"]):
+        fail(path, "needs the two Tailscale rules (policy Tailnet) above RULE-SET,ai,Exit")
+
+
 def main():
     configs = sorted((ROOT / "configs").glob("*.conf"))
     if not configs:
@@ -147,6 +182,10 @@ def main():
         elif reference and block != reference:
             fail(path, "failsafe REJECT rules differ from configs/ai-only.conf")
 
+    check_clash(CLASH_TEMPLATE, reference)
+    if "private/" not in (ROOT / ".gitignore").read_text(encoding="utf-8").split():
+        errors.append(".gitignore: private/ must be ignored (personal Clash profiles hold passwords)")
+
     for path in sorted((ROOT / "extras").glob("*.list")):
         check_extras(path)
     for path in sorted((ROOT / "sources").glob("*.txt")):
@@ -161,7 +200,7 @@ def main():
         print("\n".join(errors))
         print(f"\n{len(errors)} problem(s)")
         return 1
-    print(f"OK: {len(configs)} configs, extras, sources and docs checked")
+    print(f"OK: {len(configs)} configs, the Clash template, extras, sources and docs checked")
     return 0
 
 

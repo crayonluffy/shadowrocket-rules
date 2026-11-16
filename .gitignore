@@ -10,3 +10,6 @@
 # 暫存
 output/
 *.tmp
+
+# 個人 Clash 設定檔 (含節點密碼,不可提交)
+private/
