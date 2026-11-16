@@ -110,6 +110,28 @@ https://raw.githubusercontent.com/crayonluffy/shadowrocket-rules/main/configs/ad
 
 ---
 
+## 🔗 同時用 Tailscale？（選用）/ Using Tailscale too? (optional)
+
+iPhone 一次只能開一個 VPN，所以官方 Tailscale App 和 Shadowrocket 不能同時開。改用下面其中一個配置（取代 `AI-Only`），就能在 AI 分流的同時連回自己 tailnet 裡的電腦、伺服器。
+> An iPhone runs only one VPN at a time, so the official Tailscale app and Shadowrocket cannot both be on. Use one of the configs below (instead of `AI-Only`) to keep AI routing and still reach the computers and servers in your tailnet.
+
+| 做法 / Way | 配置 / Config | 適合 / For |
+|---|---|---|
+| A · Shadowrocket 內建 Tailscale（2.2.89 起）/ Built-in Tailscale (2.2.89 or newer) | `configs/ai-tailscale.conf` | 任何有 tailnet 的人 / Anyone with a tailnet |
+| B · 經節點進 tailnet / Through the node | `configs/ai-tailnet-via-node.conf` | 節點伺服器已在 tailnet 內的管理員 / Admins whose node server is in the tailnet |
+
+完整步驟：**[Shadowrocket + Tailscale 教學](docs/tailscale.md)**
+> Full walkthrough: **[Shadowrocket + Tailscale tutorial](docs/tailscale.md)**
+
+---
+
+## 📖 使用指南 / Guide
+
+日常操作（看流量走哪裡、更新規則、保持連線、全局路由）：**[Shadowrocket 使用指南](docs/shadowrocket-guide.md)**
+> Everyday use (see where traffic goes, update rules, stay connected, global routing): **[Shadowrocket guide](docs/shadowrocket-guide.md)**
+
+---
+
 ## 🔧 常見問題 / Troubleshooting FAQ
 
 ### 規則沒生效？ / Rules not taking effect?
@@ -158,7 +180,14 @@ shadowrocket-rules/
 │   └── adblock-extras.list       廣告攔截個人補漏清單
 ├── configs/
 │   ├── ai-only.conf              AI 分流配置（訂閱這個走 VPN）
+│   ├── ai-tailscale.conf         AI 分流 + Shadowrocket 內建 Tailscale
+│   ├── ai-tailnet-via-node.conf  AI 分流 + 經節點進 tailnet
 │   └── adblock.conf              純廣告攔截配置（可單用，或被 AI 配置 include 合併）
+├── docs/
+│   ├── tailscale.md              Shadowrocket + Tailscale 教學
+│   └── shadowrocket-guide.md     Shadowrocket 使用指南
+├── scripts/
+│   └── check.py                  檢查配置、補漏清單與文件連結
 ├── ai.list                       自動產生：AI 規則 ← ai-only.conf 引用 (PROXY)
 ├── adblock.list                  自動產生：廣告規則 ← adblock.conf 引用 (REJECT)
 └── README.md
@@ -197,6 +226,16 @@ DOMAIN-SUFFIX,newsite.com
 - **某網站被誤殺想放行**：到 `configs/adblock.conf` 的「Layer 1 誤殺放行區」加一行 `DOMAIN-SUFFIX,網站.com,DIRECT`（在 adblock RULE-SET 之上，先匹配先生效），push 後客戶端下拉刷新即可。
 - **想多擋某個廣告域名**：寫進 `extras/adblock-extras.list`，會自動合併進 `adblock.list`（策略 REJECT）。
 - **想換 / 加來源**：編輯 `sources/adblock.txt`。預設用 anti-AD（約 10 萬筆 `DOMAIN-SUFFIX`）；想再補 IP / 關鍵字規則，把檔內 blackmatrix7 那行的註解取消即可。
+
+### 改配置之前 / 之後：跑檢查
+
+```
+python3 scripts/check.py
+```
+
+會檢查每個 `.conf` 的規則與策略、`RULE-SET` 指向的清單是否存在、`extras/` 清單有沒有誤寫策略、文件連結是否有效。三個 AI 配置（`ai-only`、`ai-tailscale`、`ai-tailnet-via-node`）共用同一段「保底防護」REJECT 規則：改其中一個，另外兩個也要改，檢查會抓到不一致。
+
+兩個 Tailscale 配置的 `bypass-tun` **不能**有 `100.64.0.0/10`（否則 Tailscale 流量不會經過規則）。
 
 ### 手動觸發更新
 
