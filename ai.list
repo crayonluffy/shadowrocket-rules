@@ -1,6 +1,6 @@
 # ============================================================
 # ai.list - 自動合併產生,請勿手動編輯
-# 產生時間: 2026-11-15 03:40:01 UTC
+# 產生時間: 2026-11-16 17:18:57 UTC
 # 上游來源: sources/ai.txt
 # 個人補漏: extras/ai-extras.list
 # ============================================================
@@ -192,7 +192,7 @@ DOMAIN,cdn.usefathom.com
 # ============================================================
 # 在這裡放上游沒收錄的 AI 相關網站
 # 編輯後 push,GitHub Actions 會自動合併到 ai.list
-# 最後更新: 2026-05-23
+# 最後更新: 2026-11-16
 #
 # 上游 (在 sources/ai.txt):
 #   - blackmatrix7: 中文圈 Shadowrocket 規則 (廣度)
@@ -275,6 +275,14 @@ DOMAIN-SUFFIX,enterprise.githubcopilot.com
 DOMAIN-SUFFIX,api.githubcopilot.com
 DOMAIN-SUFFIX,proxy.githubcopilot.com
 DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
+
+# ====== Meta AI / Muse (Muse Spark) ======
+# 來源: v2fly category-ai-!cn 的 Meta 區段
+# 只含 Meta AI 本身;Facebook / Instagram 登入頁 (facebook.com、meta.com) 仍然直連
+DOMAIN-SUFFIX,meta.ai
+DOMAIN-SUFFIX,muse.ai
+DOMAIN-SUFFIX,metaaivm.com
+DOMAIN-SUFFIX,metaaiusercontent.com
 
 # ====== xAI / Grok ======
 DOMAIN-SUFFIX,grok.com
